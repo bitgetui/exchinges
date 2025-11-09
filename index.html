@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryptoExchange Pro - Advanced Trading Platform</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚡</text></svg>">
+    
+    <!-- External CSS for better organization -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Inline Critical CSS for faster initial load -->
     <style>
         * {
             margin: 0;
@@ -17,8 +25,8 @@
             --card-bg: #1e2329;
             --text-primary: #ffffff;
             --text-secondary: #848e9c;
-            --green: #0ecb81;
-            --red: #f6465d;
+            --green: #00ff88;
+            --red: #ff3333;
             --yellow: #fcd535;
             --blue: #1e53e4;
             --hover-bg: #2b3139;
@@ -26,1369 +34,532 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--primary-bg);
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Header Styles */
-        .header {
-            background: var(--secondary-bg);
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-content {
-            max-width: 1400px;
+        /* Telegram Mini App Style */
+        .app-container {
+            max-width: 100%;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--yellow);
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 25px;
-        }
-
-        .nav-tab {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: all 0.3s;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .nav-tab.active {
-            color: var(--yellow);
-            background: rgba(252, 213, 53, 0.1);
-        }
-
-        .nav-tab:hover {
-            color: var(--text-primary);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .balance-display {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 8px 16px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .balance-amount {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-        }
-
-        /* Main Container */
-        .main-container {
-            max-width: 1400px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        /* Trading Layout */
-        .trading-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr 320px;
-            gap: 15px;
-            height: calc(100vh - 120px);
-        }
-
-        /* Market List Panel */
-        .market-panel {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .market-header {
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .market-search {
-            width: 100%;
-            padding: 8px 12px;
-            background: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--text-primary);
-            outline: none;
-        }
-
-        .market-filters {
-            display: flex;
-            gap: 10px;
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .filter-btn {
-            padding: 5px 10px;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-        }
-
-        .filter-btn.active {
-            background: var(--yellow);
-            color: var(--primary-bg);
-            border-color: var(--yellow);
-        }
-
-        .market-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .market-item {
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .market-item:hover {
-            background: var(--hover-bg);
-        }
-
-        .market-item.selected {
-            background: rgba(252, 213, 53, 0.1);
-            border-left: 3px solid var(--yellow);
-        }
-
-        .coin-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .coin-logo {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-        }
-
-        .coin-name {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .coin-symbol {
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .coin-fullname {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .coin-price-info {
-            text-align: right;
-        }
-
-        .coin-price {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .coin-change {
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .positive {
-            color: var(--green);
-        }
-
-        .negative {
-            color: var(--red);
-        }
-
-        /* Chart Panel */
-        .chart-panel {
-            background: var(--card-bg);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chart-header {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chart-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .chart-coin-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .chart-coin-name {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .chart-price {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .chart-change {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .chart-change.positive {
-            background: rgba(14, 203, 129, 0.1);
-            color: var(--green);
-        }
-
-        .chart-change.negative {
-            background: rgba(246, 70, 93, 0.1);
-            color: var(--red);
-        }
-
-        .timeframe-selector {
-            display: flex;
-            gap: 5px;
-        }
-
-        .timeframe-btn {
-            padding: 6px 12px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .timeframe-btn.active {
-            background: var(--yellow);
-            color: var(--primary-bg);
-        }
-
-        .timeframe-btn:hover {
-            background: var(--hover-bg);
-            color: var(--text-primary);
-        }
-
-        .chart-container {
-            flex: 1;
-            padding: 20px;
-            position: relative;
-            min-height: 400px;
-        }
-
-        #priceChart {
-            width: 100%;
-            height: 100%;
-            background: var(--secondary-bg);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-        }
-
-        /* Order Panel */
-        .order-panel {
-            background: var(--card-bg);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .order-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .order-tab {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .order-tab.active {
-            color: var(--text-primary);
-        }
-
-        .order-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--yellow);
-        }
-
-        .order-tab.buy.active {
-            color: var(--green);
-        }
-
-        .order-tab.buy.active::after {
-            background: var(--green);
-        }
-
-        .order-tab.sell.active {
-            color: var(--red);
-        }
-
-        .order-tab.sell.active::after {
-            background: var(--red);
-        }
-
-        .order-content {
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .order-type-selector {
-            display: flex;
-            gap: 10px;
-            padding: 10px;
-            background: var(--secondary-bg);
-            border-radius: 6px;
-        }
-
-        .order-type-btn {
-            flex: 1;
-            padding: 8px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s;
-            font-size: 13px;
-        }
-
-        .order-type-btn.active {
-            background: var(--hover-bg);
-            color: var(--text-primary);
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .input-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: var(--yellow);
-        }
-
-        .order-input {
-            flex: 1;
-            padding: 10px;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            outline: none;
-            font-size: 14px;
-        }
-
-        .input-suffix {
-            padding: 0 12px;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .percentage-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .percentage-btn {
-            flex: 1;
-            padding: 6px;
-            background: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-        }
-
-        .percentage-btn:hover {
-            background: var(--hover-bg);
-            color: var(--text-primary);
-        }
-
-        .order-summary {
-            padding: 15px;
-            background: var(--secondary-bg);
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .summary-label {
-            color: var(--text-secondary);
-        }
-
-        .summary-value {
-            font-weight: 500;
-        }
-
-        .order-submit-btn {
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .order-submit-btn.buy {
-            background: var(--green);
-            color: white;
-        }
-
-        .order-submit-btn.sell {
-            background: var(--red);
-            color: white;
-        }
-
-        .order-submit-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--yellow);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Scrollbar Styles */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--secondary-bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .trading-layout {
-                grid-template-columns: 1fr;
-                height: auto;
-            }
-
-            .market-panel {
-                display: none;
-            }
-
-            .nav-tabs {
-                display: none;
-            }
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Futures Trading Specific */
-        .leverage-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: var(--secondary-bg);
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-
-        .leverage-label {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .leverage-input {
-            width: 60px;
-            padding: 5px;
             background: var(--primary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--yellow);
-            text-align: center;
-            font-weight: bold;
+            min-height: 100vh;
         }
 
-        .leverage-slider {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 4px;
-            background: var(--border-color);
-            outline: none;
-            border-radius: 2px;
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, #1e2329 0%, #2b3139 50%, #1e2329 100%);
+            background-size: 200% 100%;
+            animation: skeleton 1.5s ease-in-out infinite;
         }
 
-        .leverage-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--yellow);
-            cursor: pointer;
-            border-radius: 50%;
+        @keyframes skeleton {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        /* Position Panel */
-        .positions-panel {
-            background: var(--card-bg);
-            border-radius: 8px;
-            margin-top: 20px;
-            padding: 15px;
-        }
-
-        .positions-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .positions-title {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .positions-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .positions-table th {
-            text-align: left;
-            padding: 10px;
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .positions-table td {
-            padding: 10px;
-            font-size: 13px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .close-position-btn {
-            padding: 4px 8px;
-            background: var(--red);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            transition: all 0.3s;
-        }
-
-        .close-position-btn:hover {
-            opacity: 0.8;
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            padding: 15px 20px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            border-left: 4px solid var(--green);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 10000;
-            animation: slideIn 0.3s ease;
-            display: none;
-        }
-
-        .toast.show {
-            display: block;
-        }
-
-        .toast.error {
-            border-left-color: var(--red);
-        }
-
-        .toast.success {
-            border-left-color: var(--green);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        /* Smooth Transitions */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <span>⚡</span> CryptoExchange Pro
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <!-- Logo and Brand -->
+                <div class="logo-section">
+                    <div class="logo">
+                        <span class="logo-icon">⚡</span>
+                        <span class="logo-text">CryptoExchange Pro</span>
+                    </div>
+                    <span class="version-badge">v2.0</span>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="nav-tabs">
+                    <a href="#" class="nav-tab active" data-tab="spot">
+                        <span class="tab-icon">💱</span>
+                        <span>Spot</span>
+                    </a>
+                    <a href="#" class="nav-tab" data-tab="futures">
+                        <span class="tab-icon">📊</span>
+                        <span>Futures</span>
+                    </a>
+                    <a href="#" class="nav-tab" data-tab="margin">
+                        <span class="tab-icon">⚖️</span>
+                        <span>Margin</span>
+                    </a>
+                    <a href="#" class="nav-tab" data-tab="options">
+                        <span class="tab-icon">🎯</span>
+                        <span>Options</span>
+                    </a>
+                    <a href="#" class="nav-tab" data-tab="earn">
+                        <span class="tab-icon">💰</span>
+                        <span>Earn</span>
+                    </a>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Network Status -->
+                    <div class="network-status" id="networkStatus">
+                        <span class="status-dot online"></span>
+                        <span class="status-text">Live</span>
+                    </div>
+                    
+                    <!-- Balance Display -->
+                    <div class="balance-display">
+                        <span class="balance-icon">💰</span>
+                        <div class="balance-info">
+                            <span class="balance-label">Total Balance</span>
+                            <span class="balance-amount" id="userBalance">4,876,367,436,636 USDT</span>
+                        </div>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <button class="user-button">
+                            <span class="user-avatar">👤</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <nav class="nav-tabs">
-                <a href="#" class="nav-tab active" data-tab="spot">Spot</a>
-                <a href="#" class="nav-tab" data-tab="futures">Futures</a>
-                <a href="#" class="nav-tab" data-tab="margin">Margin</a>
-                <a href="#" class="nav-tab" data-tab="options">Options</a>
-                <a href="#" class="nav-tab" data-tab="earn">Earn</a>
-            </nav>
-            <div class="header-actions">
-                <div class="balance-display">
-                    <span>💰 Balance:</span>
-                    <span class="balance-amount" id="userBalance">4,876,367,436,636 USDT</span>
+        </header>
+
+        <!-- Sub Header with Stats -->
+        <div class="sub-header">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-label">24h Volume</span>
+                    <span class="stat-value">$89.4B</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">BTC Dominance</span>
+                    <span class="stat-value">52.3%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Market Cap</span>
+                    <span class="stat-value">$2.1T</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Fear & Greed</span>
+                    <span class="stat-value greed">75</span>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Spot Trading Tab -->
-        <div class="tab-content active" id="spot-tab">
-            <div class="trading-layout">
-                <!-- Market List Panel -->
-                <div class="market-panel">
-                    <div class="market-header">
-                        <input type="text" class="market-search" placeholder="Search coins..." id="searchInput">
-                    </div>
-                    <div class="market-filters">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="gainers">Gainers</button>
-                        <button class="filter-btn" data-filter="losers">Losers</button>
-                        <button class="filter-btn" data-filter="volume">Volume</button>
-                    </div>
-                    <div class="market-list" id="marketList">
-                        <!-- Market items will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Chart Panel -->
-                <div class="chart-panel">
-                    <div class="chart-header">
-                        <div class="chart-info">
-                            <div class="chart-coin-info">
-                                <img src="" alt="" class="coin-logo" id="selectedCoinLogo" style="width: 32px; height: 32px;">
-                                <span class="chart-coin-name" id="selectedCoinName">BTC/USDT</span>
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Spot Trading Tab -->
+            <div class="tab-content active" id="spot-tab">
+                <div class="trading-layout">
+                    <!-- Left Panel: Market List -->
+                    <aside class="market-panel">
+                        <!-- Search and Filters -->
+                        <div class="market-header">
+                            <div class="search-container">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="market-search" placeholder="Search coins..." id="searchInput">
                             </div>
-                            <div>
-                                <div class="chart-price" id="selectedCoinPrice">$0.00</div>
-                                <span class="chart-change positive" id="selectedCoinChange">+0.00%</span>
-                            </div>
-                        </div>
-                        <div class="timeframe-selector">
-                            <button class="timeframe-btn" data-time="1m">1m</button>
-                            <button class="timeframe-btn" data-time="3m">3m</button>
-                            <button class="timeframe-btn" data-time="5m">5m</button>
-                            <button class="timeframe-btn" data-time="15m">15m</button>
-                            <button class="timeframe-btn" data-time="30m">30m</button>
-                            <button class="timeframe-btn active" data-time="1h">1H</button>
-                            <button class="timeframe-btn" data-time="4h">4H</button>
-                            <button class="timeframe-btn" data-time="1d">1D</button>
-                            <button class="timeframe-btn" data-time="1w">1W</button>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="priceChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Order Panel -->
-                <div class="order-panel">
-                    <div class="order-tabs">
-                        <button class="order-tab buy active" data-type="buy">Buy</button>
-                        <button class="order-tab sell" data-type="sell">Sell</button>
-                    </div>
-                    <div class="order-content">
-                        <div class="order-type-selector">
-                            <button class="order-type-btn active" data-order="market">Market</button>
-                            <button class="order-type-btn" data-order="limit">Limit</button>
-                            <button class="order-type-btn" data-order="stop-limit">Stop-Limit</button>
                         </div>
                         
-                        <div class="input-group">
-                            <label class="input-label">
-                                <span>Price</span>
-                                <span id="currentMarketPrice">Market Price</span>
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" class="order-input" id="priceInput" placeholder="Market Price" disabled>
-                                <span class="input-suffix">USDT</span>
+                        <!-- Filter Buttons -->
+                        <div class="market-filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="favorites">⭐</button>
+                            <button class="filter-btn" data-filter="gainers">🚀</button>
+                            <button class="filter-btn" data-filter="losers">📉</button>
+                            <button class="filter-btn" data-filter="volume">📊</button>
+                            <button class="filter-btn" data-filter="new">✨</button>
+                        </div>
+
+                        <!-- Market List -->
+                        <div class="market-list-container">
+                            <div class="market-list" id="marketList">
+                                <!-- Loading skeleton -->
+                                <div class="market-item skeleton">
+                                    <div class="skeleton-coin"></div>
+                                    <div class="skeleton-price"></div>
+                                </div>
+                                <div class="market-item skeleton">
+                                    <div class="skeleton-coin"></div>
+                                    <div class="skeleton-price"></div>
+                                </div>
+                                <div class="market-item skeleton">
+                                    <div class="skeleton-coin"></div>
+                                    <div class="skeleton-price"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Center Panel: Chart -->
+                    <main class="chart-panel">
+                        <!-- Chart Header -->
+                        <div class="chart-header">
+                            <div class="chart-info">
+                                <div class="chart-coin-info">
+                                    <img src="https://via.placeholder.com/32" alt="" class="coin-logo" id="selectedCoinLogo">
+                                    <div class="coin-details">
+                                        <span class="chart-coin-name" id="selectedCoinName">BTC/USDT</span>
+                                        <span class="coin-volume" id="selectedCoinVolume">Vol: $28.5B</span>
+                                    </div>
+                                </div>
+                                <div class="price-display">
+                                    <div class="chart-price" id="selectedCoinPrice">$0.00</div>
+                                    <span class="chart-change positive" id="selectedCoinChange">+0.00%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Chart Controls -->
+                            <div class="chart-controls">
+                                <!-- Chart Type -->
+                                <div class="chart-type-selector">
+                                    <button class="chart-type-btn active" data-type="candle">
+                                        <span>🕯️</span>
+                                    </button>
+                                    <button class="chart-type-btn" data-type="line">
+                                        <span>📈</span>
+                                    </button>
+                                    <button class="chart-type-btn" data-type="area">
+                                        <span>📊</span>
+                                    </button>
+                                </div>
+
+                                <!-- Timeframe Selector -->
+                                <div class="timeframe-selector">
+                                    <button class="timeframe-btn" data-time="1m">1m</button>
+                                    <button class="timeframe-btn" data-time="3m">3m</button>
+                                    <button class="timeframe-btn active" data-time="5m">5m</button>
+                                    <button class="timeframe-btn" data-time="15m">15m</button>
+                                    <button class="timeframe-btn" data-time="30m">30m</button>
+                                    <button class="timeframe-btn" data-time="1h">1H</button>
+                                    <button class="timeframe-btn" data-time="4h">4H</button>
+                                    <button class="timeframe-btn" data-time="1d">1D</button>
+                                    <button class="timeframe-btn" data-time="1w">1W</button>
+                                </div>
+
+                                <!-- Indicators -->
+                                <button class="indicators-btn">
+                                    <span>📐</span> Indicators
+                                </button>
                             </div>
                         </div>
 
-                        <div class="input-group">
-                            <label class="input-label">
-                                <span>Amount</span>
-                                <span id="maxAmount">Max: 0.00</span>
-                            </label>
-                            <div class="input-wrapper">
-                                <input type="number" class="order-input" id="amountInput" placeholder="0.00">
-                                <span class="input-suffix" id="amountSuffix">BTC</span>
-                            </div>
-                            <div class="percentage-buttons">
-                                <button class="percentage-btn" data-percent="25">25%</button>
-                                <button class="percentage-btn" data-percent="50">50%</button>
-                                <button class="percentage-btn" data-percent="75">75%</button>
-                                <button class="percentage-btn" data-percent="100">100%</button>
-                            </div>
+                        <!-- Chart Container -->
+                        <div class="chart-container">
+                            <canvas id="priceChart"></canvas>
                         </div>
 
-                        <div class="order-summary">
-                            <div class="summary-row">
-                                <span class="summary-label">Total</span>
-                                <span class="summary-value" id="orderTotal">0.00 USDT</span>
+                        <!-- Trading View (Order Book & Trades) -->
+                        <div class="trading-view">
+                            <div class="order-book">
+                                <h4>Order Book</h4>
+                                <div class="order-book-content" id="orderBook">
+                                    <!-- Order book data -->
+                                </div>
                             </div>
-                            <div class="summary-row">
-                                <span class="summary-label">Fee (0.1%)</span>
-                                <span class="summary-value" id="orderFee">0.00 USDT</span>
+                            <div class="recent-trades">
+                                <h4>Recent Trades</h4>
+                                <div class="trades-list" id="recentTrades">
+                                    <!-- Recent trades data -->
+                                </div>
                             </div>
                         </div>
+                    </main>
 
-                        <button class="order-submit-btn buy" id="submitOrderBtn">Buy BTC</button>
-                    </div>
+                    <!-- Right Panel: Order Form -->
+                    <aside class="order-panel">
+                        <!-- Order Tabs -->
+                        <div class="order-tabs">
+                            <button class="order-tab buy active" data-type="buy">
+                                <span>Buy</span>
+                            </button>
+                            <button class="order-tab sell" data-type="sell">
+                                <span>Sell</span>
+                            </button>
+                            <button class="order-tab convert" data-type="convert">
+                                <span>Convert</span>
+                            </button>
+                        </div>
+
+                        <!-- Order Content -->
+                        <div class="order-content">
+                            <!-- Order Type Selector -->
+                            <div class="order-type-selector">
+                                <button class="order-type-btn active" data-order="market">Market</button>
+                                <button class="order-type-btn" data-order="limit">Limit</button>
+                                <button class="order-type-btn" data-order="stop-limit">Stop-Limit</button>
+                                <button class="order-type-btn" data-order="oco">OCO</button>
+                            </div>
+                            
+                            <!-- Price Input -->
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <span>Price</span>
+                                    <span class="input-hint" id="currentMarketPrice">Market Price</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="order-input" id="priceInput" placeholder="Market Price" disabled>
+                                    <span class="input-suffix">USDT</span>
+                                </div>
+                            </div>
+
+                            <!-- Amount Input -->
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <span>Amount</span>
+                                    <span class="input-hint" id="maxAmount">Max: 0.00</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="order-input" id="amountInput" placeholder="0.00" step="0.00000001">
+                                    <span class="input-suffix" id="amountSuffix">BTC</span>
+                                </div>
+                                <!-- Percentage Buttons -->
+                                <div class="percentage-buttons">
+                                    <button class="percentage-btn" data-percent="25">25%</button>
+                                    <button class="percentage-btn" data-percent="50">50%</button>
+                                    <button class="percentage-btn" data-percent="75">75%</button>
+                                    <button class="percentage-btn" data-percent="100">100%</button>
+                                </div>
+                            </div>
+
+                            <!-- Order Summary -->
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span class="summary-label">Total</span>
+                                    <span class="summary-value" id="orderTotal">0.00 USDT</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Fee (0.1%)</span>
+                                    <span class="summary-value" id="orderFee">0.00 USDT</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">You'll Receive</span>
+                                    <span class="summary-value" id="orderReceive">0.00 BTC</span>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button class="order-submit-btn buy" id="submitOrderBtn">
+                                <span class="btn-icon">🛒</span>
+                                Buy BTC
+                            </button>
+
+                            <!-- Advanced Options -->
+                            <details class="advanced-options">
+                                <summary>Advanced Options</summary>
+                                <div class="options-content">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="postOnly">
+                                        <span>Post Only</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="reduceOnly">
+                                        <span>Reduce Only</span>
+                                    </label>
+                                </div>
+                            </details>
+                        </div>
+
+                        <!-- Holdings Display -->
+                        <div class="holdings-panel">
+                            <h4>Your Holdings</h4>
+                            <div class="holdings-list" id="userHoldings">
+                                <div class="no-holdings">No holdings yet</div>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
-        </div>
 
-        <!-- Futures Trading Tab -->
-        <div class="tab-content" id="futures-tab">
-            <div class="trading-layout">
-                <!-- Reuse market panel structure -->
-                <div class="market-panel">
-                    <div class="market-header">
-                        <input type="text" class="market-search" placeholder="Search futures..." id="futuresSearchInput">
-                    </div>
-                    <div class="market-list" id="futuresMarketList">
-                        <!-- Futures market items -->
-                    </div>
-                </div>
+            <!-- Futures Trading Tab -->
+            <div class="tab-content" id="futures-tab">
+                <div class="trading-layout">
+                    <!-- Futures Market List -->
+                    <aside class="market-panel">
+                        <div class="market-header">
+                            <input type="text" class="market-search" placeholder="Search futures..." id="futuresSearchInput">
+                        </div>
+                        <div class="market-list" id="futuresMarketList">
+                            <!-- Futures contracts -->
+                        </div>
+                    </aside>
 
-                <!-- Chart Panel (same structure) -->
-                <div class="chart-panel">
-                    <div class="chart-header">
-                        <div class="chart-info">
-                            <div class="chart-coin-info">
+                    <!-- Futures Chart -->
+                    <main class="chart-panel">
+                        <div class="chart-header">
+                            <div class="chart-info">
                                 <span class="chart-coin-name">BTC-PERP</span>
-                            </div>
-                            <div>
                                 <div class="chart-price" id="futuresCoinPrice">$0.00</div>
-                                <span class="chart-change positive">+0.00%</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="futuresChart"></canvas>
-                    </div>
+                        <div class="chart-container">
+                            <canvas id="futuresChart"></canvas>
+                        </div>
+                    </main>
+
+                    <!-- Futures Order Panel -->
+                    <aside class="order-panel">
+                        <div class="order-tabs">
+                            <button class="order-tab buy active" data-type="long">Long</button>
+                            <button class="order-tab sell" data-type="short">Short</button>
+                        </div>
+                        <div class="order-content">
+                            <!-- Leverage Selector -->
+                            <div class="leverage-selector">
+                                <span class="leverage-label">Leverage:</span>
+                                <input type="range" class="leverage-slider" id="leverageSlider" min="1" max="125" value="10">
+                                <input type="text" class="leverage-input" id="leverageInput" value="10x">
+                            </div>
+                            
+                            <!-- Futures Order Form -->
+                            <div class="input-group">
+                                <label class="input-label">Size (Contracts)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="order-input" id="futuresSizeInput" placeholder="0">
+                                    <span class="input-suffix">Contracts</span>
+                                </div>
+                            </div>
+
+                            <div class="margin-info" id="marginRequired">
+                                Margin Required: 0.00 USDT
+                            </div>
+
+                            <button class="order-submit-btn buy" id="submitFuturesBtn">
+                                <span class="btn-icon">📈</span>
+                                Open Long
+                            </button>
+                        </div>
+                    </aside>
                 </div>
 
-                <!-- Futures Order Panel -->
-                <div class="order-panel">
-                    <div class="order-tabs">
-                        <button class="order-tab buy active" data-type="long">Long</button>
-                        <button class="order-tab sell" data-type="short">Short</button>
+                <!-- Open Positions Table -->
+                <div class="positions-panel">
+                    <div class="positions-header">
+                        <h3 class="positions-title">Open Positions</h3>
+                        <button class="close-all-btn">Close All</button>
                     </div>
-                    <div class="order-content">
-                        <div class="leverage-selector">
-                            <span class="leverage-label">Leverage:</span>
-                            <input type="range" class="leverage-slider" id="leverageSlider" min="1" max="125" value="10">
-                            <input type="text" class="leverage-input" id="leverageInput" value="10x">
-                        </div>
-                        
-                        <!-- Similar input structure as spot trading -->
-                        <div class="input-group">
-                            <label class="input-label">Size (Contracts)</label>
-                            <div class="input-wrapper">
-                                <input type="number" class="order-input" id="futuresSizeInput" placeholder="0">
-                                <span class="input-suffix">Contracts</span>
-                            </div>
-                        </div>
-
-                        <button class="order-submit-btn buy" id="submitFuturesBtn">Open Long</button>
-                    </div>
+                    <table class="positions-table">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Side</th>
+                                <th>Size</th>
+                                <th>Entry Price</th>
+                                <th>Mark Price</th>
+                                <th>PNL (%)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="positionsTableBody">
+                            <!-- Positions will be added here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Open Positions -->
-            <div class="positions-panel">
-                <div class="positions-header">
-                    <h3 class="positions-title">Open Positions</h3>
+            <!-- Margin Trading Tab -->
+            <div class="tab-content" id="margin-tab">
+                <div class="coming-soon">
+                    <h2>Margin Trading</h2>
+                    <p>Coming Soon...</p>
                 </div>
-                <table class="positions-table">
-                    <thead>
-                        <tr>
-                            <th>Symbol</th>
-                            <th>Side</th>
-                            <th>Size</th>
-                            <th>Entry Price</th>
-                            <th>Mark Price</th>
-                            <th>PNL</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="positionsTableBody">
-                        <!-- Positions will be added here -->
-                    </tbody>
-                </table>
+            </div>
+
+            <!-- Options Trading Tab -->
+            <div class="tab-content" id="options-tab">
+                <div class="coming-soon">
+                    <h2>Options Trading</h2>
+                    <p>Coming Soon...</p>
+                </div>
+            </div>
+
+            <!-- Earn Tab -->
+            <div class="tab-content" id="earn-tab">
+                <div class="coming-soon">
+                    <h2>Earn Crypto</h2>
+                    <p>Staking and yield farming coming soon...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <span>© 2024 CryptoExchange Pro</span>
+                    <span class="separator">|</span>
+                    <span>Real-time data from CoinGecko</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">API</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Settings content -->
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast Container -->
     <div class="toast" id="toast"></div>
 
+    <!-- Scripts -->
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Main Application Script -->
+    <script src="advanced-script.js"></script>
+    
+    <!-- Inline initialization for faster load -->
     <script>
-        // Global Variables
-        let currentBalance = 4876367436636; // USDT
-        let selectedCoin = null;
-        let marketData = [];
-        let positions = [];
-        let orderType = 'buy';
-        let tradingMode = 'spot';
-        let chart = null;
-
-        // Initialize App
+        // Quick initialization before main script loads
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-            fetchMarketData();
-            setInterval(fetchMarketData, 5000); // Update every 5 seconds
-            initializeChart();
-        });
-
-        // Initialize Application
-        function initializeApp() {
-            // Tab Navigation
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    switchTab(this.dataset.tab);
-                });
-            });
-
-            // Order Type Tabs
-            document.querySelectorAll('.order-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    orderType = this.dataset.type;
-                    updateOrderButton();
-                });
-            });
-
-            // Order Types
-            document.querySelectorAll('.order-type-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.order-type-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const isMarket = this.dataset.order === 'market';
-                    document.getElementById('priceInput').disabled = isMarket;
-                    if (isMarket) {
-                        document.getElementById('priceInput').value = '';
-                        document.getElementById('priceInput').placeholder = 'Market Price';
-                    }
-                });
-            });
-
-            // Percentage Buttons
-            document.querySelectorAll('.percentage-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const percent = parseInt(this.dataset.percent);
-                    calculateAmountByPercentage(percent);
-                });
-            });
-
-            // Amount Input
-            document.getElementById('amountInput').addEventListener('input', calculateOrderTotal);
-
-            // Submit Order
-            document.getElementById('submitOrderBtn').addEventListener('click', submitOrder);
-
-            // Search
-            document.getElementById('searchInput').addEventListener('input', filterCoins);
-
-            // Filter Buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    applyFilter(this.dataset.filter);
-                });
-            });
-
-            // Timeframe Buttons
-            document.querySelectorAll('.timeframe-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    updateChartTimeframe(this.dataset.time);
-                });
-            });
-
-            // Leverage Slider (Futures)
-            const leverageSlider = document.getElementById('leverageSlider');
-            const leverageInput = document.getElementById('leverageInput');
-            if (leverageSlider) {
-                leverageSlider.addEventListener('input', function() {
-                    leverageInput.value = this.value + 'x';
-                });
-            }
-        }
-
-        // Fetch Market Data from API
-        async function fetchMarketData() {
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h');
-                const data = await response.json();
-                marketData = data;
-                displayMarketData(data);
-                
-                // Select first coin if none selected
-                if (!selectedCoin && data.length > 0) {
-                    selectCoin(data[0]);
-                }
-            } catch (error) {
-                console.error('Error fetching market data:', error);
-                showToast('Error loading market data', 'error');
-            }
-        }
-
-        // Display Market Data
-        function displayMarketData(coins) {
+            console.log('🚀 Initializing CryptoExchange Pro...');
+            
+            // Show initial loading state
             const marketList = document.getElementById('marketList');
-            if (!marketList) return;
+            if (marketList && !window.marketDataLoaded) {
+                marketList.innerHTML = '<div class="loading-message">Loading market data...</div>';
+            }
             
-            marketList.innerHTML = coins.map(coin => `
-                <div class="market-item ${selectedCoin && selectedCoin.id === coin.id ? 'selected' : ''}" 
-                     onclick="selectCoin(${JSON.stringify(coin).replace(/"/g, '&quot;')})">
-                    <div class="coin-info">
-                        <img src="${coin.image}" alt="${coin.name}" class="coin-logo">
-                        <div class="coin-name">
-                            <span class="coin-symbol">${coin.symbol.toUpperCase()}/USDT</span>
-                            <span class="coin-fullname">${coin.name}</span>
-                        </div>
-                    </div>
-                    <div class="coin-price-info">
-                        <div class="coin-price">$${formatPrice(coin.current_price)}</div>
-                        <div class="coin-change ${coin.price_change_percentage_24h >= 0 ? 'positive' : 'negative'}">
-                            ${coin.price_change_percentage_24h >= 0 ? '+' : ''}${coin.price_change_percentage_24h.toFixed(2)}%
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Select Coin
-        function selectCoin(coin) {
-            selectedCoin = coin;
-            
-            // Update UI
-            document.getElementById('selectedCoinLogo').src = coin.image;
-            document.getElementById('selectedCoinName').textContent = `${coin.symbol.toUpperCase()}/USDT`;
-            document.getElementById('selectedCoinPrice').textContent = `$${formatPrice(coin.current_price)}`;
-            
-            const changeElement = document.getElementById('selectedCoinChange');
-            changeElement.textContent = `${coin.price_change_percentage_24h >= 0 ? '+' : ''}${coin.price_change_percentage_24h.toFixed(2)}%`;
-            changeElement.className = `chart-change ${coin.price_change_percentage_24h >= 0 ? 'positive' : 'negative'}`;
-            
-            // Update order panel
-            document.getElementById('amountSuffix').textContent = coin.symbol.toUpperCase();
-            document.getElementById('priceInput').placeholder = formatPrice(coin.current_price);
-            document.getElementById('currentMarketPrice').textContent = `$${formatPrice(coin.current_price)}`;
-            updateOrderButton();
-            
-            // Update market list selection
-            document.querySelectorAll('.market-item').forEach(item => item.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            
-            // Update chart with coin's sparkline data
-            updateChart(coin);
-        }
-
-        // Initialize Chart
-        function initializeChart() {
-            const ctx = document.getElementById('priceChart');
-            if (!ctx) return;
-            
-            const chartConfig = {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Price',
-                        data: [],
-                        borderColor: '#fcd535',
-                        backgroundColor: 'rgba(252, 213, 53, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 0,
-                        pointHoverRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#fcd535',
-                            borderWidth: 1,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return `$${formatPrice(context.parsed.y)}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#848e9c',
-                                maxTicksLimit: 8
-                            }
-                        },
-                        y: {
-                            position: 'right',
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#848e9c',
-                                callback: function(value) {
-                                    return '$' + formatPrice(value);
-                                }
-                            }
-                        }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
-                    }
+            // Set network status
+            const updateNetworkStatus = () => {
+                const status = navigator.onLine ? 'online' : 'offline';
+                const statusEl = document.getElementById('networkStatus');
+                if (statusEl) {
+                    statusEl.querySelector('.status-dot').className = `status-dot ${status}`;
+                    statusEl.querySelector('.status-text').textContent = status === 'online' ? 'Live' : 'Offline';
                 }
             };
             
-            chart = new Chart(ctx, chartConfig);
-        }
-
-        // Update Chart
-        function updateChart(coin) {
-            if (!chart || !coin.sparkline_in_7d) return;
-            
-            const prices = coin.sparkline_in_7d.price;
-            const labels = prices.map((_, index) => {
-                const hoursAgo = prices.length - index;
-                if (hoursAgo % 24 === 0) {
-                    return `${hoursAgo / 24}d`;
-                }
-                return '';
-            }).filter((label, index) => index % 12 === 0); // Show fewer labels
-            
-            chart.data.labels = labels;
-            chart.data.datasets[0].data = prices.filter((_, index) => index % 12 === 0);
-            
-            // Update chart color based on price change
-            const color = coin.price_change_percentage_24h >= 0 ? '#0ecb81' : '#f6465d';
-            chart.data.datasets[0].borderColor = color;
-            chart.data.datasets[0].backgroundColor = coin.price_change_percentage_24h >= 0 
-                ? 'rgba(14, 203, 129, 0.1)' 
-                : 'rgba(246, 70, 93, 0.1)';
-            
-            chart.update();
-        }
-
-        // Calculate Order Total
-        function calculateOrderTotal() {
-            if (!selectedCoin) return;
-            
-            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
-            const price = selectedCoin.current_price;
-            const total = amount * price;
-            const fee = total * 0.001; // 0.1% fee
-            
-            document.getElementById('orderTotal').textContent = `${formatPrice(total)} USDT`;
-            document.getElementById('orderFee').textContent = `${formatPrice(fee)} USDT`;
-        }
-
-        // Calculate Amount by Percentage
-        function calculateAmountByPercentage(percent) {
-            if (!selectedCoin) return;
-            
-            const availableBalance = currentBalance * (percent / 100);
-            const amount = availableBalance / selectedCoin.current_price;
-            
-            document.getElementById('amountInput').value = amount.toFixed(8);
-            calculateOrderTotal();
-        }
-
-        // Submit Order
-        function submitOrder() {
-            const amount = parseFloat(document.getElementById('amountInput').value);
-            
-            if (!selectedCoin || !amount || amount <= 0) {
-                showToast('Please enter a valid amount', 'error');
-                return;
-            }
-            
-            const total = amount * selectedCoin.current_price;
-            const fee = total * 0.001;
-            const totalWithFee = total + fee;
-            
-            if (orderType === 'buy' && totalWithFee > currentBalance) {
-                showToast('Insufficient balance', 'error');
-                return;
-            }
-            
-            // Process order
-            if (orderType === 'buy') {
-                currentBalance -= totalWithFee;
-                showToast(`Bought ${amount.toFixed(4)} ${selectedCoin.symbol.toUpperCase()} for ${formatPrice(total)} USDT`, 'success');
-            } else {
-                currentBalance += total - fee;
-                showToast(`Sold ${amount.toFixed(4)} ${selectedCoin.symbol.toUpperCase()} for ${formatPrice(total)} USDT`, 'success');
-            }
-            
-            // Update balance display
-            document.getElementById('userBalance').textContent = formatNumber(currentBalance) + ' USDT';
-            
-            // Reset form
-            document.getElementById('amountInput').value = '';
-            calculateOrderTotal();
-        }
-
-        // Update Order Button
-        function updateOrderButton() {
-            if (!selectedCoin) return;
-            
-            const button = document.getElementById('submitOrderBtn');
-            const symbol = selectedCoin.symbol.toUpperCase();
-            
-            if (orderType === 'buy') {
-                button.textContent = `Buy ${symbol}`;
-                button.className = 'order-submit-btn buy';
-            } else {
-                button.textContent = `Sell ${symbol}`;
-                button.className = 'order-submit-btn sell';
-            }
-        }
-
-        // Switch Tab
-        function switchTab(tab) {
-            // Update nav tabs
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.nav-tab[data-tab="${tab}"]`).classList.add('active');
-            
-            // Update content
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            const tabContent = document.getElementById(`${tab}-tab`);
-            if (tabContent) {
-                tabContent.classList.add('active');
-            }
-            
-            tradingMode = tab;
-        }
-
-        // Filter Coins
-        function filterCoins() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = marketData.filter(coin => 
-                coin.name.toLowerCase().includes(search) || 
-                coin.symbol.toLowerCase().includes(search)
-            );
-            displayMarketData(filtered);
-        }
-
-        // Apply Filter
-        function applyFilter(filter) {
-            let filtered = [...marketData];
-            
-            switch(filter) {
-                case 'gainers':
-                    filtered = filtered.filter(coin => coin.price_change_percentage_24h > 0)
-                        .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
-                    break;
-                case 'losers':
-                    filtered = filtered.filter(coin => coin.price_change_percentage_24h < 0)
-                        .sort((a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h);
-                    break;
-                case 'volume':
-                    filtered = filtered.sort((a, b) => b.total_volume - a.total_volume);
-                    break;
-            }
-            
-            displayMarketData(filtered);
-        }
-
-        // Update Chart Timeframe
-        function updateChartTimeframe(timeframe) {
-            // In a real app, this would fetch different data based on timeframe
-            console.log('Timeframe changed to:', timeframe);
-            showToast(`Chart timeframe updated to ${timeframe}`, 'success');
-        }
-
-        // Show Toast Notification
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast show ${type}`;
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Format Price
-        function formatPrice(price) {
-            if (price < 0.01) return price.toFixed(6);
-            if (price < 1) return price.toFixed(4);
-            if (price < 100) return price.toFixed(2);
-            return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        // Format Number
-        function formatNumber(num) {
-            return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-        }
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+            updateNetworkStatus();
+        });
     </script>
 </body>
 </html>
